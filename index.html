@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frontier Loop · 한 달 무료 시범 운영 신청</title>
+<meta name="description" content="Frontier Loop는 Builder가 자신의 경험과 결과물을 실험하고 공유해, 다른 사람이 따라 할 수 있는 Playbook과 수익화 제안으로 발전시키는 실행 커뮤니티입니다.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<!-- =========================================================
+     신청 폼 주소
+     아래 따옴표 안의 주소만 바꾸면 버튼 2개가 모두 바뀝니다.
+     구글폼이나 탈리 주소가 나오면 여기에 붙여 넣으세요.
+     ========================================================= -->
+<script>
+  const 신청폼주소 = "https://forms.gle/fnGzomznzicibqSW7";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("[data-apply]").forEach(function (a) {
+      a.href = 신청폼주소;
+    });
+  });
+</script>
+
+<style>
+/* =========================================================
+   디자인 토큰 · docs/design.md 기준
+   tasteskill.dev 실측값 + 갤러리 5종 패턴
+   ========================================================= */
+:root{
+  /* 배경 */
+  --hero:#F4EFE6;
+  --canvas:#F5F4F2;
+  --paper:#FFFFFF;
+  --surface:rgba(255,255,255,.62);
+
+  /* 글자 */
+  --ink:#0A0A0A;
+  --body:#525252;
+  --muted:#6B6B6B;
+  --faint:#A3A3A3;
+
+  /* 강조 — 면이 아니라 점으로만 */
+  --accent:#FF6B00;
+  --accent-fill:rgba(255,107,0,.08);
+  --accent-line:rgba(255,107,0,.35);
+
+  /* 선 — 1px 아닌 0.8px */
+  --line:#E5E5E5;
+  --line-strong:#D4D4D4;
+
+  /* 반경 3단계 */
+  --r-pill:999px;
+  --r-btn:16px;
+  --r-card:18px;
+
+  /* 폭 */
+  --w-page:1200px;
+  --w-text:640px;
+
+  --mono:'IBM Plex Mono','Pretendard',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* 화살표 아이콘 — 배경 마스크라 스크린리더가 읽지 않는다 */
+  --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  margin:0;
+  overflow-x:hidden;
+  /* 라틴은 Manrope, 한글은 Pretendard로 자동 폴백 */
+  font-family:'Manrope','Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,
+              'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  color:var(--body);
+  background:var(--canvas);
+  font-size:16px;
+  line-height:1.625;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+::selection{ background:rgba(255,107,0,.2); color:var(--ink); }
+
+.wrap{ width:100%; max-width:var(--w-page); margin:0 auto; padding:0 clamp(16px,4vw,24px); }
+.measure{ max-width:var(--w-text); }
+
+/* 구역 분리는 선이 아니라 배경 교대로 */
+section{ padding:clamp(64px,9vw,112px) 0; }
+.s-paper{ background:var(--paper); }
+.s-canvas{ background:var(--canvas); }
+
+h1,h2,h3,p,ul{ margin:0; }
+
+/* ---------- 구역 1 · 첫 화면 ---------- */
+.hero{
+  background:linear-gradient(180deg,var(--hero) 0%,var(--hero) 62%,#F5F2EC 100%);
+  padding-top:clamp(72px,12vw,128px);
+  padding-bottom:clamp(72px,11vw,120px);
+}
+.hero-grid{ display:grid; gap:48px; }
+@media (min-width:1024px){
+  .hero-grid{
+    grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);
+    gap:64px;
+    /* align-items 미지정 = stretch. 우측 스테퍼가 좌측 높이를 따라간다 */
+  }
+  .hero-aside{ display:flex; }
+}
+
+/* 마이크로 라벨 — mono / uppercase / 넓은 자간 */
+.eyebrow{
+  display:inline-flex; align-items:center; gap:9px;
+  font-family:var(--mono);
+  font-size:12px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.16em; color:var(--ink);
+  margin-bottom:24px;
+}
+.eyebrow::before{
+  content:""; flex:none;
+  width:6px; height:6px; border-radius:50%; background:var(--accent);
+}
+
+h1{
+  font-size:clamp(40px,6.6vw,80px);
+  line-height:1.04; font-weight:600; letter-spacing:-.03em;
+  color:var(--ink);
+  text-wrap:balance;
+  margin-bottom:24px;
+}
+.lead{
+  font-size:clamp(20px,2.9vw,30px); line-height:1.35;
+  font-weight:400; letter-spacing:-.022em; color:var(--ink);
+  max-width:760px; text-wrap:balance;
+  margin-bottom:24px;
+}
+.desc{
+  font-size:clamp(15px,1.9vw,17px); line-height:1.7;
+  color:var(--body); text-wrap:pretty; margin-bottom:24px;
+}
+.who{
+  font-size:15px; line-height:1.7; color:var(--muted);
+  padding-left:16px; border-left:2px solid var(--accent);
+  text-wrap:pretty; margin-bottom:40px;
+}
+
+/* ---------- 버튼 ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  width:100%; min-height:56px; padding:16px 28px;
+  background:var(--ink); color:#fff; text-decoration:none;
+  font-size:16px; font-weight:600; letter-spacing:-.01em; text-align:center;
+  border:0; border-radius:var(--r-btn);
+  box-shadow:0 14px 30px -8px rgba(0,0,0,.25);
+  transition:background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.btn::after{
+  content:""; flex:none; width:15px; height:15px;
+  background:currentColor;
+  -webkit-mask:var(--arrow) center/contain no-repeat;
+  mask:var(--arrow) center/contain no-repeat;
+  transition:transform .18s ease;
+}
+.btn:hover{
+  background:#1C1C1C; transform:translateY(-1px);
+  box-shadow:0 18px 38px -10px rgba(0,0,0,.3);
+}
+.btn:hover::after{ transform:translateX(4px); }
+a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+
+.btn-note{
+  font-size:14px; line-height:1.7;
+  color:var(--muted); text-wrap:pretty;
+  margin-top:16px;
+}
+@media (min-width:560px){ .btn{ width:auto; } }
+
+/* ---------- 공통 제목 ---------- */
+h2{
+  font-size:clamp(32px,4.8vw,60px); font-weight:600;
+  line-height:1.1; letter-spacing:-.035em; color:var(--ink);
+  text-wrap:balance;
+  margin-bottom:40px;
+}
+h3{
+  font-size:clamp(18px,2.2vw,22px); font-weight:600;
+  letter-spacing:-.02em; color:var(--ink);
+  margin:64px 0 20px;
+}
+
+/* ---------- 구역 2 · 표 ---------- */
+.tbl{ width:100%; max-width:1000px; border-collapse:collapse; }
+.tbl th{
+  text-align:left;
+  font-family:var(--mono);
+  font-size:12px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.12em; color:var(--body);
+  padding:0 0 14px; border-bottom:.8px solid var(--line);
+}
+.tbl th::before{
+  content:""; display:inline-block; vertical-align:middle;
+  width:0; height:0; margin:-2px 8px 0 0;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--faint);
+}
+.tbl td{
+  padding:22px 0; border-bottom:.8px solid var(--line);
+  vertical-align:top; font-size:16px; line-height:1.7; text-wrap:pretty;
+}
+.tbl td:first-child{ font-weight:500; color:var(--ink); width:34%; padding-right:40px; }
+.tbl td:last-child{ color:var(--body); }
+
+@media (max-width:639px){
+  .tbl, .tbl tbody, .tbl tr, .tbl td{ display:block; width:100%; }
+  .tbl thead{ display:none; }
+  .tbl tr{
+    border:.8px solid var(--line); border-radius:var(--r-card);
+    background:var(--surface); padding:20px; margin-bottom:12px;
+  }
+  .tbl td{ border:0; padding:0; }
+  .tbl td:first-child{
+    width:auto; padding:0 0 8px; color:var(--ink); font-size:16px; font-weight:600;
+  }
+  .tbl td:last-child{ font-size:15px; }
+}
+
+/* ---------- 불릿 목록 ---------- */
+ul.dot{ list-style:none; padding:0; max-width:var(--w-text); }
+ul.dot li{
+  position:relative; padding-left:20px; margin-bottom:16px;
+  font-size:16px; line-height:1.7; color:var(--body); text-wrap:pretty;
+}
+ul.dot li:last-child{ margin-bottom:0; }
+ul.dot li::before{
+  content:""; position:absolute; left:0; top:.72em;
+  width:5px; height:5px; border-radius:1px; background:var(--accent);
+}
+
+/* ---------- 구역 3 · Loop Progress indicator ---------- */
+.flow{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.flow .step{
+  background:var(--paper); color:var(--ink);
+  border:.8px solid var(--line);
+  font-family:var(--mono);
+  font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+  padding:8px 14px;
+  border-radius:var(--r-pill); white-space:nowrap;
+}
+.flow .arw{ color:var(--faint); font-size:13px; }
+
+/* 데스크톱에서는 히어로 우측의 세로 스테퍼가 된다 */
+@media (min-width:1024px){
+  .hero-aside .flow{
+    position:relative; flex:1;
+    flex-direction:column; align-items:flex-start;
+    flex-wrap:nowrap; gap:6px;
+    justify-content:space-between;
+  }
+  /* 세로 연결선 — 화살표 폭 42px의 중앙(21px)을 지난다.
+     필은 불투명 흰색이라 겹치는 구간을 자연스럽게 가린다 */
+  .hero-aside .flow::before{
+    content:""; position:absolute;
+    left:21px; top:0; bottom:0; width:1px;
+    background:var(--line);
+  }
+  .hero-aside .flow .arw{
+    position:relative; z-index:1;
+    width:42px; text-align:center; line-height:1;
+    transform:rotate(90deg);
+  }
+  .hero-aside .flow .step{
+    position:relative; z-index:1;
+    font-size:12.5px; padding:9px 16px;
+  }
+  .hero-aside .flow .step:last-child{
+    background:var(--accent-fill); border-color:var(--accent-line);
+  }
+}
+
+/* ---------- 구역 3 · 벤토 그리드 ---------- */
+.bento{ display:grid; grid-template-columns:1fr; gap:12px; }
+.bento > h3{ grid-column:1 / -1; margin:40px 0 4px; }
+.bento > h3:first-child{ margin-top:0; }
+
+.week{
+  background:var(--surface);
+  border:.8px solid var(--line); border-radius:var(--r-card);
+  padding:24px 20px; margin:0;
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+}
+.week .no{
+  display:inline-flex; align-items:center;
+  font-size:12px; font-weight:600; color:var(--ink);
+  background:var(--accent-fill); border:.8px solid var(--accent-line);
+  border-radius:var(--r-pill); padding:5px 12px; margin-bottom:16px;
+}
+.week .ttl{
+  font-weight:600; font-size:17px; letter-spacing:-.02em;
+  color:var(--ink); margin-bottom:10px; line-height:1.4;
+}
+.week .txt{ color:var(--body); font-size:14px; line-height:1.7; text-wrap:pretty; }
+
+/* 결과물 타일 */
+ul.dot.grid{
+  grid-column:1 / -1;
+  display:grid; grid-template-columns:1fr; gap:12px;
+  max-width:none; list-style:none; padding:0;
+}
+ul.dot.grid li{
+  display:flex; flex-direction:column; gap:14px;
+  margin:0; padding:24px 20px;
+  background:var(--surface); border:.8px solid var(--line);
+  border-radius:var(--r-card);
+  color:var(--ink); font-weight:500; font-size:16px; letter-spacing:-.015em;
+}
+ul.dot.grid li::before{ position:static; width:6px; height:6px; top:auto; }
+
+/* 안내 박스 */
+.box{
+  background:var(--surface); border:.8px solid var(--line);
+  border-radius:var(--r-card); padding:24px 20px;
+}
+.box.narrow{ background:var(--accent-fill); border-color:var(--accent-line); }
+.box .label{
+  font-family:var(--mono);
+  font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--body); margin-bottom:12px;
+}
+.box .label::before{
+  content:""; display:inline-block; vertical-align:middle;
+  width:0; height:0; margin:-2px 8px 0 0;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--accent);
+}
+.box .txt{ font-size:15px; line-height:1.7; color:var(--body); text-wrap:pretty; }
+
+@media (min-width:720px){
+  .bento{ grid-template-columns:repeat(2,1fr); }
+  ul.dot.grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (min-width:1024px){
+  .bento{ grid-template-columns:repeat(6,1fr); }
+  .week{ grid-column:span 2; }
+  .week.wide{ grid-column:span 4; }
+
+  /* 큰 타일 — 1주. 데스크톱에서만 위계를 준다 */
+  .week.feat{
+    grid-column:span 2; grid-row:span 2;
+    display:flex; flex-direction:column; padding:28px 24px;
+  }
+  .week.feat .no{ align-self:flex-start; margin-bottom:auto; }
+  .week.feat .ttl{ font-size:clamp(18px,1.7vw,21px); margin-top:28px; }
+  .week.feat .txt{ font-size:15px; }
+
+  ul.dot.grid{ grid-template-columns:subgrid; }
+  ul.dot.grid li:nth-child(1){ grid-column:span 3; }
+  ul.dot.grid li:nth-child(2){ grid-column:span 3; }
+  ul.dot.grid li:nth-child(3){ grid-column:span 2; }
+  ul.dot.grid li:nth-child(4){ grid-column:span 4; }
+
+  .box{ grid-column:span 4; }
+  .box.narrow{ grid-column:span 2; }
+}
+
+/* ---------- 구역 4 · 신청 ---------- */
+.cta{
+  background:var(--ink);
+  border-radius:32px 32px 0 0;
+  padding:clamp(72px,10vw,128px) 0 clamp(88px,12vw,144px);
+  position:relative; overflow:hidden;
+}
+.cta::after{
+  content:""; position:absolute; right:-140px; bottom:-200px;
+  width:560px; height:560px; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,0,.30),rgba(255,107,0,0) 68%);
+  pointer-events:none;
+}
+.cta .wrap{ position:relative; z-index:1; }
+.cta h2{
+  color:#fff; margin-bottom:20px;
+  font-size:clamp(30px,4.4vw,56px);
+  max-width:900px;
+}
+.cta p{
+  color:var(--faint); font-size:clamp(15px,1.9vw,17px); line-height:1.7;
+  text-wrap:pretty; margin-bottom:32px;
+}
+.cta .btn-note{ color:var(--faint); }
+.cta .btn{
+  background:#fff; color:var(--ink);
+  box-shadow:0 14px 30px -8px rgba(0,0,0,.55);
+}
+.cta .btn:hover{ background:var(--canvas); }
+
+/* ---------- 모션 최소화 ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<!-- ============ 구역 1 · 첫 화면 ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-main">
+      <p class="eyebrow">Frontier Loop</p>
+
+      <h1>경험과 결과물이 있어도</h1>
+
+      <p class="lead">누구의 어떤 문제를 해결하는지와 재현 가능한 방법·판매 제안을 정리하지 못해 유료 제공을 시험할 형태로 만들지 못합니다.</p>
+
+      <p class="desc measure">Frontier Loop는 Builder가 자신의 경험과 결과물을 실험하고 공유해, 다른 사람이 따라 할 수 있는 Playbook과 수익화 제안으로 발전시키는 실행 커뮤니티입니다.</p>
+
+      <p class="who measure">직장인 · 1인 사업자 · 해커톤 참여자 · 솔로프리너 · 디지털 노마드 중에서, 공유할 자산 1개 또는 일주일 안에 실행할 작은 문제 1개가 있는 분을 위한 페이지입니다.</p>
+
+      <a class="btn" data-apply href="https://forms.gle/fnGzomznzicibqSW7" target="_blank" rel="noopener">한 달 무료 시범 운영 신청하기</a>
+      <p class="btn-note measure">신청서에서 해결하고 싶은 문제를 우선순위 순으로 1~3가지 적게 됩니다. 미리 생각해 두시면 작성이 빠릅니다.</p>
+    </div>
+
+    <div class="hero-aside">
+      <div class="flow">
+        <span class="step">Why</span><span class="arw">→</span>
+        <span class="step">Hypothesis</span><span class="arw">→</span>
+        <span class="step">Experiment</span><span class="arw">→</span>
+        <span class="step">Build</span><span class="arw">→</span>
+        <span class="step">Share</span><span class="arw">→</span>
+        <span class="step">Playbook</span><span class="arw">→</span>
+        <span class="step">Village</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 구역 2 · 지금 방법과 다른 점 ============ -->
+<section class="s-paper">
+  <div class="wrap">
+    <h2>지금 방법과 무엇이 다른가</h2>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>지금 쓰는 방법</th>
+          <th>여기서 막히는 지점</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>혼자 문서·전자책·템플릿 정리</td>
+          <td>고객 문제와 재현성을 검증하지 않은 채 정리에만 시간을 쓸 수 있습니다.</td>
+        </tr>
+        <tr>
+          <td>범용 수익화 강의·콘텐츠 제작 교육</td>
+          <td>개인 자산을 실제 고객 문제에 맞추는 과정과 판매 실험이 부족할 수 있습니다.</td>
+        </tr>
+        <tr>
+          <td>커뮤니티·SNS 공유와 지인 피드백</td>
+          <td>긍정적인 반응이 실행 성공·구매 행동으로 이어지는지 구분하기 어렵습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Frontier Loop가 하는 것</h3>
+    <ul class="dot">
+      <li>자산 선택과 고객 문제 정의부터 실험·실행·공유·재현 가능한 Playbook 정제까지 이어집니다. 유용성과 지불 의사를 각각 확인합니다.</li>
+      <li>직업이 다른 참여자도 자산 1개 · 문제 1개 · 실행 절차 1개라는 공통 기준으로 작업합니다.</li>
+      <li>A 자산형은 기존 결과를 정제하고, B 신규형은 작은 문제 해결 콘텐츠를 실행하며 근거부터 만듭니다.</li>
+      <li>개발·세일즈·협력 네트워크로 테스트를 지원합니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 구역 3 · 무료로 주는 것 ============ -->
+<section class="s-canvas">
+  <div class="wrap">
+    <h2>한 달 동안 무료로 하는 것</h2>
+
+    <div class="bento">
+      <h3>4주 구성</h3>
+
+      <div class="week feat">
+        <span class="no">1주</span>
+        <p class="ttl">Why → Hypothesis</p>
+        <p class="txt">보유 자산 목록, 한 고객·한 문제·한 결과 선택, 가장 불확실한 가설과 판정 기준 작성.</p>
+      </div>
+
+      <div class="week">
+        <span class="no">2주</span>
+        <p class="ttl">Experiment → Build</p>
+        <p class="txt">잠재 사용자에게 문제와 간단한 절차를 확인하고 직접 최소 실행. 관찰한 결과를 근거로 문서·템플릿·예시 1세트를 제작.</p>
+      </div>
+
+      <div class="week">
+        <span class="no">3주</span>
+        <p class="ttl">Share → Playbook</p>
+        <p class="txt">최소 1명의 제3자 실행 테스트, 막힌 구간 기록, 절차·조건·예시·한계 수정.</p>
+      </div>
+
+      <div class="week wide">
+        <span class="no">4주</span>
+        <p class="ttl">Playbook → Village</p>
+        <p class="txt">버전 1과 테스트 기록·판매 제안 1장 공유, 다음 공동 실험·역할·반복 일정을 정함.</p>
+      </div>
+
+      <h3>끝나고 남는 것</h3>
+      <ul class="dot grid">
+        <li>Mini Playbook 1개</li>
+        <li>실행 예시 / 템플릿 1개</li>
+        <li>실제 테스트 기록 1개</li>
+        <li>판매 제안 1장</li>
+      </ul>
+
+      <h3>진행 방식과 참가비</h3>
+      <div class="box">
+        <p class="label">진행 방식</p>
+        <p class="txt">주 1회 공동 세션과 비동기 피드백으로 진행합니다. 시간과 정원은 확정 후 안내드립니다.</p>
+      </div>
+      <div class="box narrow">
+        <p class="label">참가비</p>
+        <p class="txt">참가비 0원. 시범 운영 구성은 상황에 따라 조정될 수 있으며 변경 시 안내드립니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 구역 4 · 신청 ============ -->
+<section class="cta">
+  <div class="wrap">
+    <h2>한 달 무료 시범 운영 참여 신청을 받습니다.</h2>
+    <p class="measure">일정과 참여 방식은 확정 후 안내드립니다. 시범 운영 구성은 상황에 따라 조정될 수 있으며 변경 시 안내드립니다.</p>
+    <a class="btn" data-apply href="https://forms.gle/fnGzomznzicibqSW7" target="_blank" rel="noopener">무료 시범 운영 신청하기</a>
+    <p class="btn-note measure">신청서에서 해결하고 싶은 문제를 우선순위 순으로 1~3가지 적게 됩니다. 미리 생각해 두시면 작성이 빠릅니다.</p>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
