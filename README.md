@@ -2,11 +2,12 @@
 
 한 달 무료 시범 운영 신청 페이지입니다.
 
-**https://aiwhyclub.github.io/frontier-loop-site/**
+**https://frontierloop.kr**
 
 ## 이 레포에 대해
 
 배포 전용 미러입니다. `index.html` 한 장만 담고 있고 GitHub Pages가 이걸 서빙합니다.
+`CNAME` 파일은 커스텀 도메인 연결용이라 지우면 안 됩니다.
 
 소스와 기획 문서(PRD·리서치·디자인 사양)는 비공개 레포에 있습니다.
 이 레포를 직접 수정하지 마세요 — 다음 동기화 때 덮어써집니다.
