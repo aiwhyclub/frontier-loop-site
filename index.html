@@ -262,7 +262,10 @@ ul.dot li::before{
   padding:8px 14px;
   border-radius:var(--r-pill); white-space:nowrap;
 }
-.flow .arw{ color:var(--faint); font-size:13px; }
+/* 연결 화살표 — 순서를 전달하는 텍스트라 AA 대비비를 지킨다.
+   --faint(#A3A3A3)는 크림 배경에서 2.3:1로 미달이었다.
+   연결선(--line)은 장식 보강이라 낮은 대비를 유지해도 된다 */
+.flow .arw{ color:var(--muted); font-size:13px; }
 
 /* 데스크톱에서는 히어로 우측의 세로 스테퍼가 된다 */
 @media (min-width:1024px){
