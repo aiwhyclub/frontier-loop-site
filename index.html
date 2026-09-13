@@ -49,6 +49,38 @@
       a.href = 신청폼주소;
     });
   });
+
+  /* ---------- 4차 · 스크롤 등장 ----------
+     레퍼런스(motionsites.ai)의 FadeIn — whileInView + once:true.
+     초기 숨김 CSS는 html.reveal-on 아래에만 걸린다. JS가 실패하거나 차단되면 숨김도 없다 —
+     신청 페이지에서 "콘텐츠가 영영 안 보임"은 타협할 수 없다.
+     클래스는 body 파싱 전에 붙인다. 나중에 붙이면 이미 그려진 타일이 뒤늦게 숨는다 */
+  (function () {
+    if (!("IntersectionObserver" in window)) return;
+    document.documentElement.classList.add("reveal-on");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);          /* once: true — 위로 스크롤해도 되감기지 않는다 */
+        });
+      }, { rootMargin: "0px 0px -12% 0px", threshold: .12 });
+
+      [".tbl tbody tr",
+       ".s-paper ul.dot > li",
+       ".bento > .week",
+       ".bento > ul.dot.grid > li",
+       ".bento > .box"].forEach(function (sel) {
+        document.querySelectorAll(sel).forEach(function (el, i) {
+          /* 시차는 그룹 안에서의 순서다. 상한 3 — 그 뒤로 지연이 쌓이면 굼떠 보인다 */
+          el.style.setProperty("--i", Math.min(i, 3));
+          io.observe(el);
+        });
+      });
+    });
+  })();
 </script>
 
 <style>
@@ -561,6 +593,97 @@ ul.dot.grid li::before{ position:static; width:6px; height:6px; top:auto; }
 .site-foot a:hover{ background:rgba(255,255,255,.10); }
 .site-foot a:hover::after{ transform:translateX(4px); }
 
+/* ---------- 4차 · 스크롤 등장 ---------- */
+/* motionsites.ai 3d-jack-portfolio-hero의 FadeIn(whileInView / once / y30 / 0.7s)을 옮겼다.
+   레퍼런스 이징 cubic-bezier(.25,.1,.25,1)은 CSS 키워드 ease와 정확히 같은 값이라 그대로 쓴다.
+
+   :where()로 목록의 특이도를 0으로 만든다. 안 그러면 .reveal-on .bento>.week (0,2,1)가
+   .reveal-on .is-in (0,2,0)을 이겨서 등장 상태가 영영 적용되지 않는다.
+
+   이동은 transform이 아니라 translate 속성으로 준다 — .week의 호버 리프트가 transform을
+   쓰므로, 같은 속성을 두고 두 효과가 서로를 덮어쓰지 않게 축을 나눈다.
+
+   히어로·제목·.flow·.cta·푸터는 대상이 아니다. 첫 화면은 즉시 읽혀야 하고(h1을 숨기면 LCP가
+   나빠진다), 위계가 모션에 의존해서는 안 되며, 푸터는 이미 메시 모션을 갖고 있다 */
+.reveal-on :where(
+  .tbl tbody tr,
+  .s-paper ul.dot > li,
+  .bento > .week,
+  .bento > ul.dot.grid > li,
+  .bento > .box
+){
+  opacity:0; translate:0 14px;
+  transition:opacity .7s ease, translate .7s ease;
+  transition-delay:calc(var(--i,0) * .08s);
+}
+.reveal-on .is-in{ opacity:1; translate:none; }
+
+/* ---------- 4차 · 비교표 행 리듬 ---------- */
+/* 레퍼런스 ServicesSection(거대 숫자 + 이름 + 설명 + 헤어라인)에서 좌우 스케일 대비만 가져온다.
+   .tbl은 이미 같은 구조다 — 헤어라인으로 나뉜 2열 행. 차이는 좌측 셀의 크기뿐이었다.
+   번호는 넣지 않는다: 이 3행은 순서가 아니라 '대안' 목록이라 번호가 없는 의미를 만든다.
+   모바일 카드 전환(≤639px)과 중간 구간을 건드리지 않게 1024px 이상으로 한정한다 */
+@media (min-width:1024px){
+  .tbl td{ padding:30px 0; }
+  .tbl td:first-child{
+    font-size:clamp(17px,1.6vw,20px);
+    letter-spacing:-.02em;              /* 3-3 — 크기가 커지면 자간을 좁힌다 */
+    line-height:1.35;
+  }
+}
+
+/* ---------- 4차 · 구역 이음매 ---------- */
+/* 레퍼런스는 다음 구역이 앞 구역 위로 라운드 상단을 얹는다.
+   대비가 있어 그 장치가 읽히는 이음매는 .cta와 .site-foot에 이미 적용돼 있다(12장).
+   남은 곳은 크림 → 흰색 하나뿐이라 여기만 준다.
+   .s-canvas(#F5F4F2)는 .s-paper(#FFF)와 육안 차이가 없어 라운드가 읽히지 않는다 — 제외.
+   음수 마진 끌어올림도 제외했다: 레퍼런스에서 그건 어두운 카드끼리의 이음매를 감추는
+   장치인데, 여기엔 감출 이음매가 없고 히어로 하단 패딩만 깎는다.
+
+   아래 모서리는 각지게 둔다 — 페이지를 닫는 역할은 푸터의 것이다(12-1-d).
+   크림과 흰색의 색 차가 작아 옅은 상승 그림자로 모서리를 세운다. 선이 아니라 면의 그림자라
+   "구역 분리는 선이 아니라 배경 교대"(1-3)와 충돌하지 않는다 */
+.s-paper{
+  border-radius:32px 32px 0 0;
+  box-shadow:0 -8px 24px -14px rgba(0,0,0,.07);
+}
+
+/* ---------- 4차 · 신청 제목 그라디언트 ---------- */
+/* 레퍼런스 .hero-heading은 검정 배경을 전제한다. 크림 위로 옮기면 그라디언트 한쪽 끝이
+   반드시 대비를 잃는다. 배경이 맞는 곳은 .cta 하나뿐이다.
+   위의 .cta h2{ color:#fff }를 그대로 두고 @supports로 덮기만 한다 — 미지원 브라우저는
+   지금과 똑같은 흰 글자이고, 글자가 사라지는 경로가 없다.
+   최악 정지점 #C9C9C9 on #0A0A0A = 12.0:1 (대형 텍스트 기준 3:1).
+   --accent를 쓰지 않으므로 "오렌지는 점으로만"(2-2)과 무관하다 */
+@supports ((background-clip:text) or (-webkit-background-clip:text)){
+  .cta h2{
+    background:linear-gradient(180deg,#FFFFFF 0%,#C9C9C9 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+}
+/* 고대비 모드는 배경을 강제로 치환해 글자가 사라진다 — 되돌린다 */
+@media (forced-colors:active){
+  .cta h2{ -webkit-text-fill-color:currentColor; background:none; }
+}
+
+/* ---------- 4차 · 주차 타일 호버 ---------- */
+/* 레퍼런스의 스티키 스택 카드는 적용하지 않았다 — 카드당 85vh라 페이지가 약 2배 길어지고,
+   6칼럼 격자와 .week.feat의 2x2 위계(8장), ul.dot.grid의 subgrid가 함께 죽는다.
+   여기는 훑어보고 판단하는 신청 페이지지 한 장씩 넘겨 감상하는 작품이 아니다.
+   '카드를 집어 든다'는 감각만 호버로 남긴다.
+
+   transition을 여기서 한 번에 선언한다 — 위 등장 규칙과 특이도가 같아(둘 다 0,1,0)
+   나중에 오는 이 선언이 통째로 이긴다. 등장용 opacity/translate를 함께 적어야
+   .week만 등장이 0.18초로 짧아지는 사고가 없다 */
+@media (hover:hover) and (pointer:fine){
+  .week{
+    transition:opacity .7s ease, translate .7s ease,
+               transform .18s ease, border-color .18s ease;
+  }
+  .week:hover{ transform:translateY(-2px); border-color:var(--line-strong); }
+}
+
 /* ---------- 모션 최소화 ---------- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -581,6 +704,24 @@ ul.dot.grid li::before{ position:static; width:6px; height:6px; top:auto; }
   .site-foot::before{
     animation:foot-mesh-calm 216s ease-in-out infinite alternate !important;
   }
+}
+/* 스크롤 등장도 예외 — 완전히 지우지 않는다.
+   이 프로젝트의 사용자 환경이 reduce라, 전면 정지시키면 결과를 한 번도 볼 수 없다(12-1-c).
+   이동을 6px로 줄이고 시간을 늘려, 전정기관을 자극하는 움직임 없이 '나타남'만 남긴다.
+   위 전역 규칙도 !important라 특이도로 이긴다 — :where()가 0이어도 .reveal-on이 (0,1,0) */
+@media (prefers-reduced-motion:reduce){
+  .reveal-on :where(
+    .tbl tbody tr,
+    .s-paper ul.dot > li,
+    .bento > .week,
+    .bento > ul.dot.grid > li,
+    .bento > .box
+  ){
+    translate:0 6px;
+    transition-duration:.9s !important;
+    transition-delay:calc(var(--i,0) * .05s) !important;
+  }
+  .reveal-on .is-in{ translate:none; }
 }
 </style>
 </head>
